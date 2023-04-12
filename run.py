@@ -20,6 +20,14 @@ class Tarea(db.Model):
         self.descripcion = descripcion
         self.estado = estado
 
+
+### ESQUEMAS ###
+
+ma = Marshmallow(app)
+class TareaSchema(ma.Schema):
+    class Meta:
+        fields = ('id','descripcion','estado')
+
 db.create_all()
 print("se creo la tabla tarea en la base de datos")
 
@@ -28,6 +36,18 @@ def index():
     context = {
         'status':True,
         'content':'servidor activo'
+    }
+
+    return jsonify(context)
+
+@app.route('/tarea')
+def getTarea():
+    data = Tarea.query.all() #select id,descripcion,estado from tarea
+    data_schema = TareaSchema(many=True)
+
+    context = {
+        'status':True,
+        'content':data_schema.dump(data)
     }
 
     return jsonify(context)
