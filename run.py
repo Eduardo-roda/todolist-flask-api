@@ -52,6 +52,18 @@ def getTarea():
 
     return jsonify(context)
 
+@app.route('/tarea/<id>')
+def getTareaById(id):
+    data = Tarea.query.get(id)
+    data_schema = TareaSchema()
+
+    context = {
+        'status':True,
+        'content':data_schema.dump(data)
+    }
+
+    return jsonify(context)
+
 @app.route('/tarea',methods=['POST'])
 def setTarea():
     descripcion = request.json['descripcion']
