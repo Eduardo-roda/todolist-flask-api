@@ -52,4 +52,23 @@ def getTarea():
 
     return jsonify(context)
 
+@app.route('/tarea',methods=['POST'])
+def setTarea():
+    descripcion = request.json['descripcion']
+    estado = request.json['estado']
+
+    #insert into tarea(descripcion,estado) values(?,?)
+    nuevaTarea = Tarea(descripcion,estado)
+    db.session.add(nuevaTarea)
+    db.session.commit()
+
+    data_schema = TareaSchema()
+
+    context = {
+        'status':True,
+        'content':data_schema.dump(nuevaTarea)
+    }
+
+    return jsonify(context)
+
 app.run(debug=True)
